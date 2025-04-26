@@ -1,6 +1,5 @@
 const { DataTypes } = require('sequelize');
 const { sequelize } = require('../config/db');
-const { link } = require('../app');
 
 const Company = sequelize.define('Company', {
   id: {

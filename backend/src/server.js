@@ -9,7 +9,7 @@ const startServer = async () => {
   await connectDB();
 
   // Use alter:true to keep schema in sync without migrations
-  await sequelize.sync({ alter: true });
+  await sequelize.sync({ force: true });
 
   app.listen(PORT, () => {
     logger.info(`Server running on http://localhost:${PORT}`);

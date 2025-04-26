@@ -26,10 +26,10 @@ exports.updateProfile = async (req, res) => {
         } = req.body;
 
         const company = await Company.findByPk(companyId);
-        if (!company) return
+        if (!company) 
         {
             logger.error('Company not found');
-            res.status(404).json({ message: 'Company not found' });
+            return res.status(404).json({ message: 'Company not found' });
         }
         let imageUrl = company.imageUrl;
 
