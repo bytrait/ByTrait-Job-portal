@@ -1,0 +1,103 @@
+:root {
+    --bs-primary: #1a73e8;
+    --bs-body-bg: #f9f9f9;
+    --bs-body-color: #222;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: var(--bs-body-bg);
+    color: var(--bs-body-color);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-weight: 600;
+    color: #1a1a1a;
+}
+
+a {
+    color: var(--bs-primary);
+    text-decoration: none;
+}
+
+button {
+    border-radius: 8px !important;
+    padding: 0.5rem 1rem;
+}
+
+/* Customize Bootstrap components */
+.btn-primary {
+    background-color: #5271FF;
+    border-color: #5271FF;
+}
+
+.btn-primary:hover {
+    background-color: #4059CC;
+}
+
+input,
+textarea,
+select {
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    padding: 15px 20px;
+    font-size: 16px;
+    font-family: 'Poppins', sans-serif;
+    outline: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    width: 100%;
+    background-color: #fff;
+    color: #333;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+    border-color: #1a73e8;
+    box-shadow: 0 0 0 2px rgba(26, 115, 232, 0.2);
+}
+
+/* Placeholder style */
+input::placeholder,
+textarea::placeholder {
+    color: #aaa;
+    font-size: 14px;
+}
+
+.form-control {
+    border-radius: 6px;
+    padding: 10px 14px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+    background-color: #fff;
+    color: #333;
+    box-shadow: none !important;
+}
+
+.form-control:focus {
+    border-color: #1a73e8;
+    box-shadow: 0 0 0 2px rgba(26, 115, 232, 0.2) !important;
+}
+
+.auth {
+    padding: 100px;
+    width: 100%;
+    background-image: url('src/assets/image1.png'), url('src/assets/image2.png');
+    background-position: right top, right bottom;
+    background-repeat: no-repeat, no-repeat;
+    background-size: 600px 600px, 600px 600px;
+    overflow-x: hidden;
+}
+
+@media (max-width: 768px) {
+    .auth {
+        padding: 0;
+    }
+}

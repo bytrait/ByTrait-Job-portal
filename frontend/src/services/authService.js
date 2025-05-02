@@ -10,10 +10,10 @@ export const sendOtp = async (email,companyName) => {
   }
 }
 
-export const verifyOtp = async (email, otp) => {
+export const registerAndLogin = async (companyName,email, otp) => {
   try {
-    const response = await API.post("/auth/verify-otp", { email, otp });
-    return response.data;
+    const response = await API.post("/auth/register-company-and-login", { companyName, email, otp });
+    return response;
   } catch (error) {
     console.error("Error verifying OTP:", error);
     throw error;
