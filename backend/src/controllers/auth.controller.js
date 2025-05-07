@@ -5,7 +5,7 @@ const generateToken = require('../utils/jwt.util');
 const logger = require('../utils/logger');
 const verifyOTP = require('../utils/varifyOTP');
 
-const sendOtp = async (req, res) => {
+const sendOtpForRegistration = async (req, res) => {
   const { email } = req.body;
   if (!email) {
     logger.error('Email are required');
@@ -24,6 +24,32 @@ const sendOtp = async (req, res) => {
   logger.info(`Sent OTP to email: ${email}`);
   return res.status(200).json({ message: 'OTP sent to email' });
 };
+
+const sendOtpForLogin = async (req, res) => {
+  const { email } = req.body;
+  if (!email) {
+    logger.error('Email is required');
+    return res.status(400).json({ message: 'Email is required' });
+  }
+
+  const company = await Company.findOne({ where: { email } });
+  if (!company) {
+    logger.error('Company not found');
+    return res.status(404).json({ message: 'Company not found' });
+  }
+
+  const otp = generateOTP();
+  if (!otp) {
+    logger.error('Failed to generate OTP');
+    return res.status(500).json({ message: 'Failed to generate OTP' });
+  }
+  const expiresAt = new Date(Date.now() + (parseInt(process.env.OTP_EXPIRY_MINUTES || 5) * 60000));
+  logger.info(`Generated OTP: ${otp} for email: ${email}`);
+  await OTP.create({ email, otp, expiresAt });
+  await sendOTPEmail(email, otp);
+  logger.info(`Sent OTP to email: ${email}`);
+  return res.status(200).json({ message: 'OTP sent to email' });
+}
 
 const verifyOtpAndLogin = async (req, res) => {
   const { email, otp } = req.body;
@@ -77,13 +103,14 @@ const registerCompanyAndLogin = async (req, res) => {
     return res.status(500).json({ message: 'Failed to create company' });
   }
   const token = generateToken({id:newCompany.id});
-  logger.info(`Generated token for new company: ${newCompany.name}`);
+  logger.info(`Generated token for new company: ${newCompany.companyName}`);
   return res.status(201).json({ token, isProfileComplete: newCompany.isProfileComplete });
 
 }
 
 module.exports = {
-  sendOtp,
+  sendOtpForRegistration,
+  sendOtpForLogin,
   verifyOtpAndLogin,
   registerCompanyAndLogin
 };

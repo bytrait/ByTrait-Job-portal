@@ -1,16 +1,22 @@
-import React, { useState } from 'react';
-import { registerAndLogin, sendOtp } from '../../services/authService';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { registerAndLogin, sendOtpForRegistration } from '../../services/authService';
+import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 const CompanyRegister = () => {
     const [email, setEmail] = useState('');
     const [otp, setOtp] = useState('');
     const [companyName, setCompanyName] = useState('');
+    const [isFormValid, setIsFormValid] = useState(false);
+
+    useEffect(() => {
+        // Check if all fields are filled
+        setIsFormValid(email.trim() !== '' && otp.trim() !== '' && companyName.trim() !== '');
+    }, [email, otp, companyName]);
 
     const handleSendOtp = async () => {
         try {
-            const res = await sendOtp(email);
+            const res = await sendOtpForRegistration(email);
             if (res.status === 200) {
                 toast.success('OTP sent to your email');
             }
@@ -22,14 +28,17 @@ const CompanyRegister = () => {
     const handleVerifyOtp = async () => {
         try {
             const res = await registerAndLogin(companyName, email, otp);
-            if (res.status === 200) {
-                localStorage.setItem('token', res.data.token);
-                localStorage.setItem('role', 'company');
+            console.log(res);
+            if (res.status === 201) {
+                sessionStorage.setItem('compnay-token', res.data.token);
+                sessionStorage.setItem('role', 'company');
                 toast.success('Login successful');
-                // TODO: Redirect after successful login
+
+                useNavigate('/company/dashboard');
+
             }
         } catch (err) {
-            toast.error('Invalid OTP');
+            toast.error(err.response?.data?.message || 'Error verifying OTP');
         }
     };
 
@@ -88,7 +97,14 @@ const CompanyRegister = () => {
                                 />
                             </div>
                         </div>
-                        <button className="btn btn-primary w-100" type="button" onClick={handleVerifyOtp}>Login</button>
+                        <button
+                            className="btn btn-primary w-100"
+                            type="button"
+                            onClick={handleVerifyOtp}
+                            disabled={!isFormValid} // Disable button if form is invalid
+                        >
+                            Login
+                        </button>
                         <div className="text-center mt-3">
                             <p className="mb-0">Already have an account? <Link to="/login" className="text-primary">Login</Link></p>
                         </div>

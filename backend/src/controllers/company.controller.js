@@ -1,22 +1,19 @@
 const db = require('../models');
 const Company = db.Company;
 const cloudinary = require('../utils/cloudinary');
+const { default: getCloudinaryPublicId } = require('../utils/getCloudinaryPublicId');
 const logger = require('../utils/logger');
 
-// Helper to extract public_id from URL
-const getCloudinaryPublicId = (url) => {
-    if (!url) return null;
-    const parts = url.split('/');
-    const filename = parts[parts.length - 1];
-    return filename.split('.')[0]; // remove .jpg/.png etc.
-};
 
 exports.updateProfile = async (req, res) => {
     try {
         const companyId = req.company.id;
         const {
             website,
+            email,
+            companyName,
             establishedYear,
+            phone,
             country,
             about,
             facebook,
@@ -55,12 +52,18 @@ exports.updateProfile = async (req, res) => {
 
         logger.info('Updating company profile');
         await Company.update({
+            companyName,
+            email,
             imageUrl,
+            phone,
             website,
-            establishedYear,
+            establishedYear: establishedYear + "",
             country,
             about,
-            facebook, linkedin, instagram, twitter
+            facebook: facebook + "",
+            linkedin: linkedin + "",
+            instagram: instagram + "",
+            twitter: twitter + ""
         }, {
             where: { id: companyId }
         });
@@ -77,6 +80,25 @@ exports.updateProfile = async (req, res) => {
 
     } catch (err) {
         console.error(err);
+        return res.status(500).json({ message: 'Server error' });
+    }
+};
+
+exports.getCompanyProfile = async (req, res) => {
+    try {
+        const companyId = req.company.id;
+        const company = await Company.findByPk(companyId);
+        if (!company) {
+            logger.error('Company not found');
+            return res.status(404).json({ message: 'Company not found' });
+        }
+        logger.info('Company profile retrieved successfully');
+        return res.status(200).json({
+            message: 'Company profile retrieved successfully',
+            data: company,
+        });
+    } catch (err) {
+        logger.error('Error retrieving company profile', err);
         return res.status(500).json({ message: 'Server error' });
     }
 };

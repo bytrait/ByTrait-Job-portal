@@ -1,0 +1,13 @@
+thead.custom-header {
+    background-color: #E0E7FF !important;
+}
+
+tbody tr:nth-child(even) {
+    background-color: #FFFFFF;
+    color: #000000;
+}
+
+tbody tr:nth-child(odd) {
+    background-color: #808080;
+    color: #FFFFFF;
+}

@@ -1,11 +1,31 @@
 import API from "./api";
 
-export const sendOtp = async (email,companyName) => {
+export const sendOtpForRegistration = async (email) => {
   try {
-    const response = await API.post("/auth/send-otp", { email ,companyName});
-    return response.data;
+    const response = await API.post("/auth/send-otp-register", { email });
+    return response;
   } catch (error) {
     console.error("Error sending OTP:", error);
+    throw error;
+  }
+}
+
+export const sendOtpForLogin = async (email) => {
+  try {
+    const response = await API.post("/auth/send-otp-login", { email });
+    return response;
+  } catch (error) {
+    console.error("Error sending OTP:", error);
+    throw error;
+  }
+}
+
+export const varifyOTPAndLogin = async (email, otp) => {
+  try {
+    const response = await API.post("/auth/verify-otp-and-login", { email, otp });
+    return response;
+  } catch (error) {
+    console.error("Error verifying OTP:", error);
     throw error;
   }
 }

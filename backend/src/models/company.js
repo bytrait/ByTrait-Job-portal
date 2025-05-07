@@ -30,7 +30,7 @@ const Company = sequelize.define('Company', {
     allowNull: true,
   },
   establishedYear: {
-    type: DataTypes.INTEGER,
+    type: DataTypes.STRING,
     allowNull: true,
   },
   country: {

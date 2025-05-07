@@ -6,5 +6,6 @@ const upload = require('../middleware/upload.middleware');
 
 // Profile update route
 router.put('/profile', verifyCompany, upload.single('image'), companyController.updateProfile);
+router.get('/profile', verifyCompany, companyController.getCompanyProfile);
 
 module.exports = router;

@@ -1,14 +1,15 @@
 const express = require('express');
 const cors = require('cors');
 const app = express();
-
+const cookieParser = require('cookie-parser');
 // Middlewares
 app.use(cors(
   {
-    origin: 'http://localhost:5173', 
+    origin: 'http://127.0.0.1:5173', 
     credentials: true, 
   }
 ));
+app.use(cookieParser());
 app.use(express.json());
 
 // Routes
