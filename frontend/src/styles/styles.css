@@ -102,6 +102,17 @@ textarea::placeholder {
     overflow-x: hidden;
 }
 
+.small-check-input {
+    width: 1rem;
+    height: 1rem;
+  }
+  
+  .job-card:hover {
+    /* background-color: #E3E9F9;  */
+    box-shadow: 0 4px 4px rgba(0, 0, 0, 0.1);
+  }
+
+
 @media (max-width: 768px) {
     .auth {
         padding: 0;

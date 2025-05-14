@@ -9,7 +9,7 @@ const sendOtpForRegistration = async (req, res) => {
   const { email } = req.body;
   if (!email) {
     logger.error('Email are required');
-    return res.status(400).json({ message: 'Email  are required' })
+    return res.status(400).json({ message: 'Email are required' })
   };
 
   const otp = generateOTP();

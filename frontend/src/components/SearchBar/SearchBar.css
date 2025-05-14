@@ -1,0 +1,53 @@
+.search-bar-container {
+    background-color: white;
+    border-radius: 12px;
+    padding: 10px 20px;
+    max-width: 834px;
+    width: 100%;
+    display: flex; /* Ensure everything stays in a row */
+    align-items: center; /* Align items vertically */
+    gap: 10px;
+  }
+  
+  .search-bar-container input {
+    flex: 1;
+    min-width: 100px;
+    border: none;
+    box-shadow: none;
+    padding-left: 5px;
+  }
+  
+  .search-bar-container .vertical-divider {
+    width: 1px;
+    height: 30px;
+    background-color: #ccc;
+    margin: 0 10px;
+  }
+  
+  .search-bar-container .btn {
+    white-space: nowrap;
+    min-width: 100px; /* Ensure button has enough width */
+  }
+  
+  /* For mobile view */
+  @media (max-width: 576px) {
+    .search-bar-container {
+      flex-direction: column;
+      border-radius: 20px;
+      padding: 15px;
+    }
+  
+    .search-bar-container input {
+      width: 100%;
+    }
+  
+    .search-bar-container .vertical-divider {
+      display: none;
+    }
+  
+    .search-bar-container .btn {
+      width: 100%;
+      margin-top: 10px; /* Space between input and button */
+    }
+  }
+  

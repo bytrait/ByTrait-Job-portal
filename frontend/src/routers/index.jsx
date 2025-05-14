@@ -7,6 +7,8 @@ import Register from '../pages/Register';
 import NotFound from '../pages/NotFound';
 import CompanyProfile from '../pages/CompanyProfile';
 import JobListPage from '../pages/JobLIstPage';
+import JobsPage from '../pages/JobsPage';
+import JobDescription from '../pages/JobDescription';
 const AppRouter = () => {
     return (
         <Router>
@@ -16,6 +18,8 @@ const AppRouter = () => {
                 <Route path="/job-list" element={<JobListPage />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
+                <Route path="/search" element={<JobsPage />} />
+                <Route path="/job/:id" element={<JobDescription/>} />
                 <Route path='/companyprofile' element={<CompanyProfile/>}/>
                 
                 <Route path="*" element={<NotFound />} />
