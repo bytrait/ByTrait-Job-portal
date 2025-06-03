@@ -120,7 +120,7 @@ const CampusJobPost = () => {
           <ul className="mt-2 list-inline">
             {skills.map((skill, index) => (
               <li key={index} className="list-inline-item me-2">
-                <span className="badge bg-secondary p-2 d-flex align-items-center">
+                <span className="badge bg-secondary text-secondary p-2 d-flex align-items-center">
                   {skill}
                   <i className="bi bi-x-lg text-danger ms-2" onClick={() => removeSkill(skill)}></i>
                 </span>
