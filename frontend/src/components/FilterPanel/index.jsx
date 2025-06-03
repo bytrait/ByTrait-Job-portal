@@ -86,8 +86,8 @@ const FilterPanel = ({ filters, setFilters }) => {
           onChange={e => {
             setSkills(e.target.value);
           }}
-        // onChange={handleChange}
         />
+        {!skills && <small className="text-danger">Skills are required</small>}
       </div>
 
       {/* Location */}
@@ -101,13 +101,22 @@ const FilterPanel = ({ filters, setFilters }) => {
           className="form-control"
           onChange={e => {
             setLocation(e.target.value);
-          }
-          }
-        // onChange={handleChange}
+          }}
         />
+        {!location && <small className="text-danger">Location is required</small>}
       </div>
 
-      <div className='btn w-100 btn-primary' onClick={handleSearch}>Search</div>
+      <div
+        className='btn w-100 btn-primary'
+        onClick={() => {
+          if (!skills || !location) {
+            return;
+          }
+          handleSearch();
+        }}
+      >
+        Search
+      </div>
 
       <h5 className='mt-4'>Job Type</h5>
       {jobTypes.map((type) => (
@@ -173,7 +182,6 @@ const FilterPanel = ({ filters, setFilters }) => {
         />
         <label className="form-label">Last 30 days</label>
       </div>
-
 
       <h5 className='mt-4'>Industry</h5>
 

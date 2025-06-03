@@ -41,3 +41,13 @@ export const getJobById = async (jobId) => {
         throw error;
     }
 }
+
+export const getMyAppliedJobs = async () => {
+    try {
+        const response = await API.get(`/jobs/myjobs`);
+        return response.data;
+    } catch (error) {
+        console.error("Error fetching my applied jobs:", error);
+        throw error;
+    }
+}

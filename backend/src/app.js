@@ -17,7 +17,8 @@ app.use('/api/auth', require('./routes/auth.routes'));
 app.use('/api/company', require('./routes/company.routes'));
 app.use("/api/jobs", require("./routes/job.routes"));
 app.use("/api/industries", require("./routes/industry.routes"));
-
+app.use('/api/job-applications', require('./routes/jobApplication.routes'));
+app.use('/api/campus-jobs', require('./routes/campushJob.routes'));
 app.get('/', (req, res) => {
   res.send('Job Portal Backend Running');
 });

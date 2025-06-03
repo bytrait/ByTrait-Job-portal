@@ -1,5 +1,5 @@
 const { Op } = require("sequelize");
-const { Job, Industry, Company } = require("../models");
+const { Job, Industry, Company, JobApplication } = require("../models");
 const logger = require("../utils/logger");
 
 exports.createJob = async (req, res) => {
@@ -84,6 +84,7 @@ exports.getalljobsbycompany = async (req, res) => {
   try {
     const companyId = req.company.id;
     console.log("Company ID:", companyId);
+    
     if (!companyId) {
       logger.error("Company ID not found in request");
       return res.status(401).json({ message: "Unauthorized" });
@@ -94,24 +95,35 @@ exports.getalljobsbycompany = async (req, res) => {
     const jobs = await Job.findAll({
       where: { companyId },
       include: [
-        { model: Industry, as: 'Industry' },
-        // { model: Company, as: 'Company' }
+        { model: Industry, as: 'Industry' }, // Include Industry details
+        {
+          model: JobApplication,
+          as: 'applications', // This alias must match your association
+          attributes: ['id']  // Only get job application ID to save data
+        }
       ]
     });
-    logger.info("Jobs fetched successfully for company ID:", companyId);
+
     if (!jobs || jobs.length === 0) {
       logger.info("No jobs found for company ID:", companyId);
       return res.status(404).json({ message: "No jobs found" });
     }
+
+    // Add job application count to each job
+    const jobsWithApplicationCount = jobs.map(job => ({
+      ...job.toJSON(),
+      applicationCount: job.applications ? job.applications.length : 0
+    }));
+
     logger.info("Jobs fetched successfully for company ID:", companyId);
+    res.status(200).json(jobsWithApplicationCount);
 
-
-    res.status(200).json(jobs);
   } catch (error) {
     logger.error("Error fetching jobs:", error);
     res.status(500).json({ message: "Internal server error" });
   }
-}
+};
+
 
 exports.filterJobs = async (req, res) => {
   try {
@@ -224,10 +236,58 @@ exports.getJobById = async (req, res) => {
       return res.status(404).json({ message: "Job not found" });
     }
 
+    // Check if the user has already applied for this job
+    const userId = req.user.userId; 
+    const alreadyApplied = await JobApplication.findOne({
+      where: { jobId: id, userId }
+    });
+
     logger.info("Job fetched successfully with ID:", id);
-    res.status(200).json(job);
+    res.status(200).json({
+      ...job.toJSON(),
+      alreadyApplied: !!alreadyApplied
+    });
   } catch (error) {
     logger.error("Error fetching job by ID:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+
+exports.getMyAppliedJobs = async (req, res) => {
+  try {
+    const userId = req.user.userId; 
+
+    if (!userId) {
+      logger.error("User ID not found in request");
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+
+    logger.info("Fetching applied jobs for user ID:", userId);
+
+    const appliedJobs = await JobApplication.findAll({
+      where: { userId },
+      include: [
+        {
+          model: Job,
+          as: "Job",
+          include: [
+            { model: Industry, attributes: ["name"], as: "Industry" },
+            { model: Company, attributes: ["companyName", "website", "imageUrl"], as: "Company" }
+          ]
+        }
+      ]
+    });
+
+    if (!appliedJobs || appliedJobs.length === 0) {
+      logger.info("No applied jobs found for user ID:", userId);
+      return res.status(404).json({ message: "No applied jobs found" });
+    }
+
+    logger.info("Applied jobs fetched successfully for user ID:", userId);
+    res.status(200).json(appliedJobs);
+  } catch (error) {
+    logger.error("Error fetching applied jobs:", error);
     res.status(500).json({ message: "Internal server error" });
   }
 };

@@ -9,6 +9,10 @@ import CompanyProfile from '../pages/CompanyProfile';
 import JobListPage from '../pages/JobLIstPage';
 import JobsPage from '../pages/JobsPage';
 import JobDescription from '../pages/JobDescription';
+import MyJobPage from '../pages/MyJobPage';
+import JobApplication from '../pages/JobApplication';
+import CampusJobPost from '../pages/CampusJobPost';
+import MyCampusPage from '../pages/MyCampusPage';
 const AppRouter = () => {
     return (
         <Router>
@@ -21,7 +25,11 @@ const AppRouter = () => {
                 <Route path="/search" element={<JobsPage />} />
                 <Route path="/job/:id" element={<JobDescription/>} />
                 <Route path='/companyprofile' element={<CompanyProfile/>}/>
-                
+                <Route path='/myjobs' element={<MyJobPage/>}/>
+                <Route path='applications/:jobId' element={<JobApplication/>}/>
+                <Route path='campus/post-job' element={<CampusJobPost/>}/>
+                <Route path="/my-campus" element={<MyCampusPage />} />
+                {/* Add more routes as needed */}
                 <Route path="*" element={<NotFound />} />
             </Routes>
         </Router>

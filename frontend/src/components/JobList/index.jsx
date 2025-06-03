@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { getallcompanyJobs } from '../../services/jobService';
+import { useNavigate } from 'react-router-dom';
 
 const JobList = () => {
+    const navigation = useNavigate();
     const [jobs, setJobs] = useState([]);
 
     useEffect(() => {
@@ -45,11 +47,14 @@ const JobList = () => {
                                 <i className="bi bi-geo-alt text-primary ms-1"></i> {job.location}
                             </p>
                         </td>
-                        <td className='text-primary '>
+                        <td className='text-primary hover cursor-pointer' >
                             
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '5px',cursor:'pointer' }} onClick={() => navigation(`/applications/${job.id}`)}>
                             <i className="bi bi-people-fill "></i> 
-                            
-                            (23)Applications
+
+
+                            ({job.applicationCount})Applications
+                            </div>
                             
                             
                         </td>

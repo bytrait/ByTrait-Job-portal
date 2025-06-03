@@ -1,18 +1,35 @@
+
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { getJobById } from '../services/jobService';
+import CommonModal from '../components/common/CommonModal';
+import { applyToJob } from '../services/jobApplicationService';
+import { toast } from 'react-toastify';
 
 const JobDescription = () => {
     const { id } = useParams("id");
     const [job, setJob] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [showModal, setShowModal] = useState(false);
+    const [isCustomResume, setIsCustomResume] = useState(false);
+    const [resumeLink, setResumeLink] = useState('');
+    const [isApplied, setIsApplied] = useState(false);
+    const [isAppliedLink, setIsAppliedLink] = useState(false);
 
     useEffect(() => {
         // Fetch job details using the id
         const fetchJobDetails = async () => {
             try {
                 const data = await getJobById(id);
+                console.log('Job data:', data);
                 setJob(data);
+                if (data.applyLink) {
+                    console.log('Job has an apply link:', data.applyLink);
+                    setIsAppliedLink(true);
+                } else {
+                    setIsAppliedLink(false);
+                }
+                setIsApplied(data.alreadyApplied);                
             } catch (error) {
                 console.error('Error fetching job details:', error);
             } finally {
@@ -22,6 +39,25 @@ const JobDescription = () => {
 
         fetchJobDetails();
     }, [id]);
+
+
+    const handleApply = async () => {
+        const response = await applyToJob(job.id, isCustomResume, resumeLink);
+        if (response.status === 201) {
+            
+            toast.success('Application submitted successfully!');
+            setShowModal(false);
+            setResumeLink(''); 
+            setIsCustomResume(false); 
+            setIsApplied(true); 
+           
+        } else if (response.status === 400) {
+            toast.error(response.data.message || 'You have already applied to this job.');
+        }
+        else {
+            toast.error('Failed to apply for the job. Please try again later.');
+        }
+    };
 
     if (loading) {
         return <div className="container text-center mt-5">Loading...</div>;
@@ -69,10 +105,28 @@ const JobDescription = () => {
                         </div>
 
                         <div className='col-3' >
-                            <div className="btn btn-primary w-100 fs-5">
+
+
+                        {isAppliedLink ? (
+                            <a href={job.applyLink} target="_blank" rel="noopener noreferrer" className="btn btn-primary w-100 fs-5">
+                                Apply <i className="bi bi-box-arrow-up-right ms-1"></i>
+                            </a>
+                        ) : isApplied ? (
+                            <div className="btn btn-success w-100 fs-5" disabled>
+                                Applied
+                            </div>
+                        ) : (
+                            <div className="btn btn-primary w-100 fs-5"
+                                onClick={() => setShowModal(true)}
+                            >
                                 Apply
                             </div>
+                        )}
+
+
+                        
                         </div>
+
                     </div>
                 </div>
             </div>
@@ -136,15 +190,15 @@ const JobDescription = () => {
 
                 </div>
                 <div className="col-9 p-3 rounded border">
-                   {job.description}
+                    {job.description}
 
-                   <ul className="mt-3 list-inline">
+                    <ul className="mt-3 list-inline">
                         {job.skills.map((skill, index) => (
                             <li key={index} className="list-inline-item me-2">
                                 <span className="badge bg-secondary d-flex align-items-center p-3 mb-1 text-secondary">
                                     {skill}
 
-                                    
+
 
                                 </span>
                             </li>
@@ -152,6 +206,100 @@ const JobDescription = () => {
                     </ul>
                 </div>
             </div>
+            {showModal && (
+                <CommonModal
+                    title={`Apply for ${job.title}`}
+                    show={showModal}
+                    handleClose={() => setShowModal(false)}
+                >
+
+                    <div className="mb-1 d-flex flex-row gap-2">
+                        <input
+                            type="radio"
+                            name="resumeType"
+                            value="bytrait"
+                            checked={isCustomResume === false}
+                            onChange={() => setIsCustomResume(false)}
+                            style={{ width: '20px', height: '20px' }}
+                        />
+                        <label className="form-label">Use ByTrait Resume
+                        </label>
+                    </div>
+
+                    {/* <div className="">
+                        <input
+                            className="form-check-input"
+                            type="radio"
+                            name="resumeType"
+                            // id="bytrait"
+                            value="bytrait"
+                            checked={resumeType === 'bytrait'}
+                            onChange={() => setResumeType('bytrait')}
+                        />
+                        <label className="form-check-label" htmlFor="bytrait">
+                            Use ByTrait Resume
+                        </label>
+                    </div> */}
+
+                    <div className="mb-1 d-flex flex-row gap-2">
+                        <input
+                            className=""
+                            type="radio"
+                            name="resumeType"
+                            id="custom"
+                            value="custom"
+                            checked={isCustomResume === true}
+                            onChange={() => setIsCustomResume(true)}
+                            style={{ width: '20px', height: '20px' }}
+                        />
+                        <label className="form-check-label" htmlFor="custom">
+                            Provide Custom Resume Link
+                        </label>
+                    </div>
+
+                    {isCustomResume === true && (
+                        <>
+                            <div className="mb-1">
+                                <label htmlFor="resumeLink" className="form-label"> <strong>Resume Link</strong></label>
+                                <input
+                                    type="url"
+                                    className="form-control"
+                                    id="resumeLink"
+                                    placeholder="Paste your resume link"
+                                    value={resumeLink}
+                                    onChange={(e) => setResumeLink(e.target.value)}
+                                />
+                            </div>
+                            <small className="text-muted d-block">
+
+                                <i className="bi bi-exclamation-triangle-fill text-warning me-1 fs-5"></i>
+                                You may upload your resume to Google Drive or a similar platform. Please ensure the link is publicly accessible so recruiters can view it without restrictions.                            </small>
+                        </>
+                    )}
+
+
+                    <div className="d-flex justify-content-end mt-3">
+                        <button
+                            className="btn btn-primary me-2"
+                            onClick={() => {
+                                // Handle apply action here
+                                handleApply();
+
+                            }}
+                        >
+                            Apply
+                        </button>
+                        <button
+                            className="btn btn-secondary"
+                            onClick={() => setShowModal(false)}
+                        >
+                            Cancel
+                        </button>
+                    </div>
+                </CommonModal>)
+            }
+
+
         </div>
     );
 }

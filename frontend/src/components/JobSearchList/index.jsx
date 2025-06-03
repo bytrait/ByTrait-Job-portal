@@ -9,7 +9,7 @@ const JobList = ({ jobs }) => {
           <div 
             key={job.id} 
             className='mb-3 border px-3 py-4 rounded job-card' 
-            onClick={() => window.location.href = `/job/${job.id}`}
+            onClick={() => window.open(`/job/${job.id}`, '_blank')}
             style={{ cursor: 'pointer' }}
           >
             <div className='card-body'>

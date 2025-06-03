@@ -89,6 +89,13 @@ textarea::placeholder {
 .bg-secondary {
     background-color: #E3E9F9 !important;
 }
+.btn-success {
+    background-color: #32CD32;
+    border-color: #4CAF50;
+}
+.btn-success:hover {
+    background-color: #2ebb2e;
+}
 .text-secondary {
     color: #56698E !important;
 }
