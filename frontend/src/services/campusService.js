@@ -9,3 +9,8 @@ export const getCampusJobs = async () => {
   const res = await API.get(`/campus-jobs/my-campus-jobs`);
   return res.data;
 }
+
+export const getCampusJobById = async (jobId) => {
+  const res = await API.get(`/campus-jobs/jobs/${jobId}`);
+  return res.data;
+};

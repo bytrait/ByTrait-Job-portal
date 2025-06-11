@@ -99,6 +99,11 @@ textarea::placeholder {
 .text-secondary {
     color: #56698E !important;
 }
+
+.vh-75 {
+    height: 75vh !important;
+  }
+  
 .auth {
     padding: 100px;
     width: 100%;

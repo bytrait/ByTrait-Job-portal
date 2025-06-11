@@ -14,7 +14,6 @@ const JobsPage = () => {
     dateFilter: 'all',
     jobType: [],
     industryIds: [],
-    dateFilter: 'all',
   });
 
   const fetchJobs = async (activeFilters) => {

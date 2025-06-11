@@ -2,11 +2,12 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { getCampusJobs } from '../services/campusService';
+import { useNavigate } from 'react-router-dom';
 
 const MyCampusPage = () => {
     const [jobs, setJobs] = useState([]);
     const [loading, setLoading] = useState(true);
-
+    const navigate = useNavigate();
     const fetchJobs = async () => {
         try {
             const data = await getCampusJobs();
@@ -16,15 +17,6 @@ const MyCampusPage = () => {
             toast.error("Failed to load campus jobs.");
         } finally {
             setLoading(false);
-        }
-    };
-
-    const applyToJob = async (jobId) => {
-        try {
-            await axios.post(`/api/campus-jobs/${jobId}/apply`);
-            toast.success("Applied successfully!");
-        } catch (err) {
-            toast.error(err?.response?.data?.message || "Failed to apply.");
         }
     };
 
@@ -44,7 +36,7 @@ const MyCampusPage = () => {
                 jobs.map((job) => (
                     <div key={job.id} className="mb-3 bg-light rounded">
                         <div className="mb-3 border px-3 py-4 rounded job-card" 
-                        onClick={() => applyToJob(job.id)} style={{ cursor: 'pointer' }}>
+                        onClick={() => navigate(`/my-campus/job/${job.id}`)}>
 
                             <div className='d-flex align-items-center mb-1'>
                                 <div>

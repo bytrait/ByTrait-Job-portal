@@ -13,6 +13,9 @@ import MyJobPage from '../pages/MyJobPage';
 import JobApplication from '../pages/JobApplication';
 import CampusJobPost from '../pages/CampusJobPost';
 import MyCampusPage from '../pages/MyCampusPage';
+import JobDescription2 from '../pages/JobDescription2'; 
+import CampusApplicatons from '../pages/CampusApplicatons';
+import AllScrapJobPage from '../pages/AllScrapJobPage';
 const AppRouter = () => {
     return (
         <Router>
@@ -29,6 +32,9 @@ const AppRouter = () => {
                 <Route path='applications/:jobId' element={<JobApplication/>}/>
                 <Route path='campus/post-job' element={<CampusJobPost/>}/>
                 <Route path="/my-campus" element={<MyCampusPage />} />
+                <Route path='/my-campus/job/:jobId' element={<JobDescription2/>} />
+                <Route path="/campus/campus-applications" element={<CampusApplicatons/>} />
+                <Route path="/all-jobs" element={<AllScrapJobPage />} />
                 {/* Add more routes as needed */}
                 <Route path="*" element={<NotFound />} />
             </Routes>
