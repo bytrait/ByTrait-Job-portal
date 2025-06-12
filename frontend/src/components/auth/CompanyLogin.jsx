@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { sendOtpForLogin, varifyOTPAndLogin } from '../../services/authService';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 const CompanyLogin = () => {
   const [email, setEmail] = useState('');
   const [otp, setOtp] = useState('');
   const [isFormValid, setIsFormValid] = useState(false);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     // Check if all fields are filled
@@ -28,10 +30,11 @@ const CompanyLogin = () => {
     try {
       const res = await varifyOTPAndLogin(email, otp);
       if (res.status === 200) {
-        sessionStorage.setItem('compnay-token', res.data.token);
+        sessionStorage.setItem('company-token', res.data.token);
         sessionStorage.setItem('role', 'company');
         toast.success('Login successful');
         // Redirect to company dashboard or profile completion
+        navigate('/company/job-post');
       }
     } catch (err) {
       toast.error(err.response?.data?.message || 'Error verifying OTP');
@@ -89,7 +92,7 @@ const CompanyLogin = () => {
               Login
             </button>
             <div className="text-center mt-3">
-              <p className="mb-0">Don't have an account? <Link to="/register" className="text-primary">Register</Link></p>
+              <p className="mb-0">Don't have an account? <Link to="/company/register" className="text-primary">Register</Link></p>
             </div>
           </div>
         </div>

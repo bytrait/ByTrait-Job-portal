@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
-import { getCampusJobs } from '../services/campusService';
+import { getCampusJobs } from '../../services/campusService';
 import { useNavigate } from 'react-router-dom';
 
 const MyCampusPage = () => {

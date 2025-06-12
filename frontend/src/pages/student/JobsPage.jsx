@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import FilterPanel from '../components/FilterPanel';
-import JobList from '../components/JobSearchList';
+import FilterPanel from '../../components/FilterPanel';
+import JobList from '../../components/JobSearchList';
 import { useLocation } from 'react-router-dom';
-import { getfilteredJobs } from '../services/jobService';
+import { getfilteredJobs } from '../../services/jobService';
 
 const JobsPage = () => {
   const location = useLocation();

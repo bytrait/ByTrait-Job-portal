@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
-import { getCompanyProfile, updateCompanyProfile } from '../services/CompanyService';
+import { getCompanyProfile, updateCompanyProfile } from '../../services/CompanyService';
 
 const CompanyProfile = () => {
     const fileInputRef = useRef(null);

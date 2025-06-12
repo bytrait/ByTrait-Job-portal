@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, use } from 'react';
 import { registerAndLogin, sendOtpForRegistration } from '../../services/authService';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
@@ -8,6 +8,7 @@ const CompanyRegister = () => {
     const [otp, setOtp] = useState('');
     const [companyName, setCompanyName] = useState('');
     const [isFormValid, setIsFormValid] = useState(false);
+    const navigate = useNavigate();
 
     useEffect(() => {
         // Check if all fields are filled
@@ -32,9 +33,10 @@ const CompanyRegister = () => {
             if (res.status === 201) {
                 sessionStorage.setItem('compnay-token', res.data.token);
                 sessionStorage.setItem('role', 'company');
-                toast.success('Login successful');
+                toast.success('Registration successful');
 
-                useNavigate('/company/dashboard');
+                // Redirect to company dashboard or profile completion
+                navigate('/company/dashboard');
 
             }
         } catch (err) {
@@ -106,7 +108,7 @@ const CompanyRegister = () => {
                             Login
                         </button>
                         <div className="text-center mt-3">
-                            <p className="mb-0">Already have an account? <Link to="/login" className="text-primary">Login</Link></p>
+                            <p className="mb-0">Already have an account? <Link to="/company/login" className="text-primary">Login</Link></p>
                         </div>
                     </div>
                 </div>

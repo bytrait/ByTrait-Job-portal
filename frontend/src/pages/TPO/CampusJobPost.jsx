@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { getIndustries } from '../services/Industry';
+import { getIndustries } from '../../services/Industry';
 import { toast } from 'react-toastify';
-import { postCampusJob } from '../services/campusService';
+import { postCampusJob } from '../../services/campusService';
 
 const CampusJobPost = () => {
   const [title, setTitle] = useState('');

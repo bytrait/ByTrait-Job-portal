@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { getMyAppliedJobs } from '../services/jobService';
+import { getMyAppliedJobs } from '../../services/jobService';
 import { useNavigate } from 'react-router-dom';
 
 const MyJobPage = () => {

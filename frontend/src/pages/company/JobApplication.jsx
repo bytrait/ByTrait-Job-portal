@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { getApplicationsWithUserData } from '../services/jobApplicationService';
+import { getApplicationsWithUserData } from '../../services/jobApplicationService';
 
 const JobApplication = () => {
   const { jobId } = useParams("jobId");

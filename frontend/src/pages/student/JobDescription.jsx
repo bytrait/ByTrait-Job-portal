@@ -1,9 +1,9 @@
 
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { getJobById } from '../services/jobService';
-import CommonModal from '../components/common/CommonModal';
-import { applyToJob } from '../services/jobApplicationService';
+import { getJobById } from '../../services/jobService';
+import CommonModal from '../../components/common/CommonModal';
+import { applyToJob } from '../../services/jobApplicationService';
 import { toast } from 'react-toastify';
 
 const JobDescription = () => {

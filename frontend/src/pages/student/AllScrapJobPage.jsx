@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { getScrapedJobs } from '../services/jobScrapService';
+import { getScrapedJobs } from '../../services/jobScrapService';
 
 const AllScrapJobPage = () => {
     const [jobs, setJobs] = useState([]);

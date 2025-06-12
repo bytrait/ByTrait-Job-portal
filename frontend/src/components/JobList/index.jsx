@@ -10,7 +10,6 @@ const JobList = () => {
         const fetchJobs = async () => {
             try {
                 const response = await getallcompanyJobs();
-                console.log( response);
                 setJobs(response);
             } catch (error) {
                 console.error('Error fetching jobs:', error);

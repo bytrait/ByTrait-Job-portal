@@ -4,6 +4,7 @@ const sendOTPEmail = require('../utils/mail.util');
 const generateToken = require('../utils/jwt.util');
 const logger = require('../utils/logger');
 const verifyOTP = require('../utils/varifyOTP');
+const jwt = require('jsonwebtoken');
 
 const sendOtpForRegistration = async (req, res) => {
   const { email } = req.body;
@@ -65,8 +66,8 @@ const verifyOtpAndLogin = async (req, res) => {
         logger.error('Company not found');
         return res.status(404).json({ message: 'Company not found' });
       }
-      const token = generateToken({ id: company.id });
-      logger.info(`Generated token for company: ${company.name}`);
+      const token = generateToken({ id: company.id, companyName: company.companyName, email: company.email });
+      logger.info(`Generated token for company: ${company.companyName}`);
       return res.status(200).json({ token });
     }
     logger.error('Invalid OTP');
@@ -95,22 +96,56 @@ const registerCompanyAndLogin = async (req, res) => {
     return res.status(400).json({ message: 'Invalid OTP' });
   }
 
-  
 
-  const newCompany = await Company.create({companyName, email });
+
+  const newCompany = await Company.create({ companyName, email });
   if (!newCompany) {
     logger.error('Failed to create company');
     return res.status(500).json({ message: 'Failed to create company' });
   }
-  const token = generateToken({id:newCompany.id});
+  const token = generateToken({ id: newCompany.id, companyName: newCompany.companyName, email: newCompany.email });
   logger.info(`Generated token for new company: ${newCompany.companyName}`);
   return res.status(201).json({ token, isProfileComplete: newCompany.isProfileComplete });
 
 }
 
+const getUserInfo = async (req, res) => {
+  try {
+    const { userId, name, username, isCounsellor } = req.user;
+    if (!userId || !name || !username) {
+      logger.error('User information is incomplete');
+      return res.status(400).json({ message: 'User information is incomplete' });
+    }
+    let role = 'student'; // Default role
+    if (isCounsellor === '1') {
+      role = 'TPO';
+    }
+    logger.info(`Fetched user info for userId: ${userId}`);
+    res.json({ userId, name, username, role });
+  } catch (error) {
+    logger.error('Error fetching user info:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
+const getCompanyInfo = async (req, res) => {
+  try {
+    const { id, companyName,email } = req.company;
+    console.log(req.company)
+    logger.info(`Fetched company info for companyId: ${id}`);
+    res.json({ id, companyName, email, role: 'company' });
+  } catch (error) {
+    logger.error('Error fetching company info:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
+
 module.exports = {
   sendOtpForRegistration,
   sendOtpForLogin,
   verifyOtpAndLogin,
-  registerCompanyAndLogin
+  registerCompanyAndLogin,
+  getUserInfo,
+  getCompanyInfo
 };

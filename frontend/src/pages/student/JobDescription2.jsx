@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { getCampusJobById } from '../services/campusService';
+import { getCampusJobById } from '../../services/campusService';
 import { useParams } from 'react-router-dom';
 
-const JobDescription = () => {
+const JobDescription2 = () => {
     const { jobId } = useParams("jobId");
     const [job, setJob] = useState(null);
 
@@ -148,4 +148,4 @@ const JobDescription = () => {
     );
 };
 
-export default JobDescription;
+export default JobDescription2;

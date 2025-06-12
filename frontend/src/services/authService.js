@@ -1,5 +1,6 @@
 import API from "./api";
 
+
 export const sendOtpForRegistration = async (email) => {
   try {
     const response = await API.post("/auth/send-otp-register", { email });
@@ -40,3 +41,8 @@ export const registerAndLogin = async (companyName,email, otp) => {
   }
 }
 
+export const getUserInfo = () => API.get('/auth/user');
+export const getCompanyInfo = (token) =>
+  API.get('/auth/company', {
+    headers: { Authorization: `Bearer ${token}` },
+  });

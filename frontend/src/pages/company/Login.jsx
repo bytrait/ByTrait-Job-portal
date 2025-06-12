@@ -1,5 +1,5 @@
 import React from 'react';
-import CompanyLogin from '../components/auth/CompanyLogin';
+import CompanyLogin from '../../components/auth/CompanyLogin';
 
 const Login = () => {
     return (
