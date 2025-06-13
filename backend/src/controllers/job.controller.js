@@ -291,3 +291,131 @@ exports.getMyAppliedJobs = async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
+
+exports.deleteJob = async (req, res) => {
+  try {
+    const jobId = req.params.id;
+    const companyId = req.company.id;
+
+    if (!jobId) {
+      logger.error("Job ID not provided in request");
+      return res.status(400).json({ message: "Job ID is required" });
+    }
+
+    if (!companyId) {
+      logger.error("Company ID not found in request");
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+
+    logger.info("Attempting to delete job with ID:", jobId);
+
+    const job = await Job.findOne({ where: { id: jobId, companyId } });
+
+    if (!job) {
+      logger.info("No job found with ID:", jobId);
+      return res.status(404).json({ message: "Job not found or unauthorized to delete" });
+    }
+
+    await job.destroy();
+    logger.info("Job deleted successfully with ID:", jobId);
+
+    res.status(200).json({ message: "Job deleted successfully" });
+  } catch (error) {
+    logger.error("Error deleting job:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+exports.getJobByIdForCompany = async (req, res) => {
+  try {
+    const jobId = req.params.id;
+    const companyId = req.company.id;
+
+    if (!jobId) {
+      logger.error("Job ID not provided in request");
+      return res.status(400).json({ message: "Job ID is required" });
+    }
+
+    if (!companyId) {
+      logger.error("Company ID not found in request");
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+
+    logger.info("Fetching job with ID:", jobId, "for company ID:", companyId);
+
+    const job = await Job.findOne({
+      where: { id: jobId, companyId },
+      include: [
+        { model: Industry, attributes: ["name"], as: "Industry" },
+        { model: Company, attributes: ["companyName", "website", "imageUrl"], as: "Company" }
+      ]
+    });
+
+    if (!job) {
+      logger.info("No job found with ID:", jobId, "for company ID:", companyId);
+      return res.status(404).json({ message: "Job not found" });
+    }
+
+    logger.info("Job fetched successfully with ID:", jobId, "for company ID:", companyId);
+    res.status(200).json(job);
+  } catch (error) {
+    logger.error("Error fetching job by ID for company:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+exports.updateJob = async (req, res) => {
+  try {
+    const jobId = req.params.id;
+    const companyId = req.company.id;
+    const {
+      title,
+      applyLink,
+      skills,
+      jobType,
+      industryId,
+      qualification,
+      location,
+      minSalary,
+      maxSalary,
+      description
+    } = req.body;
+
+    if (!jobId) {
+      logger.error("Job ID not provided in request");
+      return res.status(400).json({ message: "Job ID is required" });
+    }
+
+    if (!companyId) {
+      logger.error("Company ID not found in request");
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+
+    logger.info("Attempting to update job with ID:", jobId);
+
+    const job = await Job.findOne({ where: { id: jobId, companyId } });
+
+    if (!job) {
+      logger.info("No job found with ID:", jobId);
+      return res.status(404).json({ message: "Job not found or unauthorized to update" });
+    }
+
+    const updatedJob = await job.update({
+      title,
+      applyLink,
+      skills,
+      jobType,
+      industryId,
+      qualification,
+      location,
+      minSalary,
+      maxSalary,
+      description
+    });
+
+    logger.info("Job updated successfully with ID:", jobId);
+    res.status(200).json({ message: "Job updated successfully", job: updatedJob });
+  } catch (error) {
+    logger.error("Error updating job:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};

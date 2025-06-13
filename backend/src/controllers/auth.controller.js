@@ -111,27 +111,36 @@ const registerCompanyAndLogin = async (req, res) => {
 
 const getUserInfo = async (req, res) => {
   try {
-    const { userId, name, username, isCounsellor } = req.user;
-    if (!userId || !name || !username) {
+    const { userId, isCounsellor } = req.user;
+
+    if (!userId) {
       logger.error('User information is incomplete');
       return res.status(400).json({ message: 'User information is incomplete' });
     }
-    let role = 'student'; // Default role
-    if (isCounsellor === '1') {
+
+    let role = 'student'; // Default
+
+    const adminIds = process.env.ADMIN_USER_IDS?.split(',') || [];
+    if (adminIds.includes(userId.toString())) {
+      role = 'admin';
+    } else if (isCounsellor === '1') {
       role = 'TPO';
     }
-    logger.info(`Fetched user info for userId: ${userId}`);
-    res.json({ userId, name, username, role });
+    console.log(role)
+    logger.info(`Fetched user info for userId: ${userId}, role: ${role}`);
+    res.json({ userId, role });
+
   } catch (error) {
     logger.error('Error fetching user info:', error);
     res.status(500).json({ message: 'Internal server error' });
   }
 };
 
+
+
 const getCompanyInfo = async (req, res) => {
   try {
     const { id, companyName,email } = req.company;
-    console.log(req.company)
     logger.info(`Fetched company info for companyId: ${id}`);
     res.json({ id, companyName, email, role: 'company' });
   } catch (error) {

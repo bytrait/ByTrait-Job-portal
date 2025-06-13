@@ -9,7 +9,6 @@ const verifyStudentTokenFromCookie = (req, res, next) => {
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    console.log("Decoded JWT:", decoded);
     req.user = decoded.user; // contains { id, email }
     next();
   } catch (err) {
