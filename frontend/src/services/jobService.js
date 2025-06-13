@@ -51,3 +51,31 @@ export const getMyAppliedJobs = async () => {
         throw error;
     }
 }
+
+export const deleteJob = async (jobId) => {
+    try {
+        const response = await API.delete(`/jobs/${jobId}`);
+        return response.data;
+    } catch (error) {
+        console.error("Error deleting job:", error);
+        throw error;
+    }
+}
+export const getJobByIdForCompany =  async (jobId)=>{
+    try{
+    const response = await API.get(`/jobs/${jobId}`);
+    return response.data;
+    }catch(error){
+        console.error("Error fetching by id",error);
+        throw error;
+    }
+}
+export const updateJob = async (jobId, jobData) => {
+    try {
+        const response = await API.put(`/jobs/${jobId}`, jobData);
+        return response.data;
+    } catch (error) {
+        console.error("Error updating job:", error);
+        throw error;
+    }
+}

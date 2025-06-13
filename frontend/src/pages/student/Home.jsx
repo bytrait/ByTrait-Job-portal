@@ -1,12 +1,10 @@
 import React from 'react';
 import SearchBar from '../../components/SearchBar';
 import ScrapedJobs from '../../components/ScrapedJobs/ScrapedJobs';
-import Navbar from '../../components/Header/Header';
 
 const Home = () => {
   return (
     <>
-    <Navbar/>
       {/* Fullscreen Hero Section */}
       <div className="d-flex flex-column align-items-center justify-content-center vh-75 bg-light px-3">
         <h1

@@ -16,23 +16,18 @@ export const AuthProvider = ({ children }) => {
       try {
         const res = await getUserInfo();
         setUser({ ...res.data, role: res.data.role || 'student' });
-        console.log('✅ Authenticated as non-company user:', res.data);
       } catch (err) {
         const token = sessionStorage.getItem('company-token');
-        console.log('🔍 Checking company-token in sessionStorage:', token);
 
         if (token) {
           try {
             const res = await getCompanyInfo(token);
             setUser({ ...res.data, role: 'company' });
-            console.log('✅ Authenticated as company:', res.data);
           } catch (companyErr) {
-            console.error('❌ Company auth failed:', companyErr.response?.data || companyErr.message);
-            sessionStorage.removeItem('company-token'); // Clear bad token
+            sessionStorage.removeItem('company-token'); 
             setUser(null);
           }
         } else {
-          console.warn('⚠️ No token found. Not authenticated.');
           setUser(null);
         }
       }
