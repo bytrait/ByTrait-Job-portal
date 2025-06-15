@@ -14,3 +14,6 @@ export const getCampusJobById = async (jobId) => {
   const res = await API.get(`/campus-jobs/jobs/${jobId}`);
   return res.data;
 };
+
+export const updateCampusJob = (id, jobData) => API.put(`/campus-jobs/jobs/${id}`, jobData);
+export const deleteCampusJob = (id) => API.delete(`/campus-jobs/jobs/${id}`);

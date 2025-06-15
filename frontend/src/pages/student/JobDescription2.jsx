@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { getCampusJobById } from '../../services/campusService';
 import { useParams } from 'react-router-dom';
+import { applyToCampusJob } from '../../services/campusApplicationService';
+import { toast } from 'react-toastify';
 
 const JobDescription2 = () => {
     const { jobId } = useParams("jobId");
@@ -20,6 +22,21 @@ const JobDescription2 = () => {
         fetchJobDetails();
     }, [jobId]);
 
+    const handleApply = async () => {
+        if (!job.applyLink) return;
+      
+        try {
+          await applyToCampusJob(job.id);
+          toast.success('Application submitted!');
+      
+          const url = job.applyLink.startsWith('http') ? job.applyLink : `https://${job.applyLink}`;
+          window.open(url, '_blank');  // open in new tab
+        } catch (error) {
+          toast.error(error.response?.data?.message || 'Failed to apply');
+          console.error('Apply Error:', error);
+        }
+      };
+      
     if (!job) {
         return <div>Loading...</div>;
     }
@@ -60,12 +77,10 @@ const JobDescription2 = () => {
                             </span>
                         </div>
                         <div className="mt-3 col-3 d-flex justify-content-end">
-                            {job.applyLink ? (
-                                <a href={job.applyLink} target="_blank" rel="noopener noreferrer" className="btn btn-primary w-100">
+                            {job.applyLink && (
+                                <button className="btn btn-primary w-100" onClick={handleApply}>
                                     <strong>Apply <i className="bi bi-box-arrow-up-right ms-2"></i></strong>
-                                </a>
-                            ) : (
-                                <button className="btn btn-primary w-100"><strong>Apply</strong></button>
+                                </button>
                             )}
                         </div>
                     </div>

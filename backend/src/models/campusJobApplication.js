@@ -21,10 +21,6 @@ const CampusJobApplication = sequelize.define('CampusJobApplication', {
         type: DataTypes.INTEGER,
         allowNull: false,
     },
-    status: {
-        type: DataTypes.ENUM('applied', 'reviewed', 'shortlisted', 'rejected', 'selected'),
-        defaultValue: 'applied',
-    },
     applied_at: {
         type: DataTypes.DATE,
         defaultValue: DataTypes.NOW,

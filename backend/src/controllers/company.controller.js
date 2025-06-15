@@ -3,6 +3,7 @@ const Company = db.Company;
 const cloudinary = require('../utils/cloudinary');
 const { default: getCloudinaryPublicId } = require('../utils/getCloudinaryPublicId');
 const logger = require('../utils/logger');
+const sendCompanyApprovalEmail = require('../utils/sendCompanyApprovalEmail');
 
 
 exports.updateProfile = async (req, res) => {
@@ -23,8 +24,7 @@ exports.updateProfile = async (req, res) => {
         } = req.body;
 
         const company = await Company.findByPk(companyId);
-        if (!company) 
-        {
+        if (!company) {
             logger.error('Company not found');
             return res.status(404).json({ message: 'Company not found' });
         }
@@ -100,5 +100,44 @@ exports.getCompanyProfile = async (req, res) => {
     } catch (err) {
         logger.error('Error retrieving company profile', err);
         return res.status(500).json({ message: 'Server error' });
+    }
+};
+
+
+exports.getPendingCompanies = async (req, res) => {
+    try {
+        const pendingCompanies = await Company.findAll({ where: { status: 'pending' } });
+        res.json(pendingCompanies);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+
+exports.approveCompany = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        const company = await Company.findByPk(id);
+        if (!company) return res.status(404).json({ message: 'Company not found.' });
+
+        await Company.update({ status: 'approved', isVerified: true }, { where: { id } });
+
+        // Send approval email
+        await sendCompanyApprovalEmail(company.email, company.name);
+
+        res.json({ message: 'Company approved and email sent.' });
+    } catch (error) {
+        console.error('Approval error:', error);
+        res.status(500).json({ error: error.message });
+    }
+};
+
+exports.rejectCompany = async (req, res) => {
+    try {
+        const { id } = req.params;
+        await Company.update({ status: 'rejected' }, { where: { id } });
+        res.json({ message: 'Company rejected.' });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
     }
 };

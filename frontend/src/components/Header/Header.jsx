@@ -52,13 +52,27 @@ const Navbar = () => {
       return (
         <>
           <li className="nav-item">
+            <Link className="nav-link" to="/campus/dashboard">Dashboard</Link>
+          </li>
+          <li className="nav-item">
             <Link className="nav-link" to="/campus/post-job">Post Job</Link>
           </li>
           <li className="nav-item">
-            <Link className="nav-link" to="/campus/campus-applications">Applications</Link>
+            <Link className="nav-link" to="/campus/manage-jobs">Manage Jobs</Link>
           </li>
         </>
       );
+    }
+
+    if (user.role === "admin") {
+      return (<>
+        <li className="nav-item">
+          <Link className="nav-link" to="/admin/company-request">Request</Link>
+        </li>
+        <li className="nav-item">
+          <Link className="nav-link" to="/admin/manage-industry">Industry</Link>
+        </li>
+      </>);
     }
 
     return null;

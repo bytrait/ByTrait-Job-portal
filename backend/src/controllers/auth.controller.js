@@ -54,26 +54,63 @@ const sendOtpForLogin = async (req, res) => {
 
 const verifyOtpAndLogin = async (req, res) => {
   const { email, otp } = req.body;
+
   try {
     if (!email || !otp) {
       logger.error('Email and OTP are required');
       return res.status(400).json({ message: 'Email and OTP are required' });
     }
 
-    if (verifyOTP(email, otp)) {
-      const company = await Company.findOne({ where: { email } });
-      if (!company) {
-        logger.error('Company not found');
-        return res.status(404).json({ message: 'Company not found' });
-      }
-      const token = generateToken({ id: company.id, companyName: company.companyName, email: company.email });
-      logger.info(`Generated token for company: ${company.companyName}`);
-      return res.status(200).json({ token });
+    // 1. Find matching OTP
+    const otpRecord = await OTP.findOne({ where: { email } });
+
+    if (!otpRecord) {
+      logger.warn(`OTP not found for email: ${email}`);
+      return res.status(400).json({ message: 'Invalid or expired OTP' });
     }
-    logger.error('Invalid OTP');
-    return res.status(400).json({ message: 'Invalid OTP' });
+
+    // 2. Check expiry
+    if (new Date(otpRecord.expiresAt) < new Date()) {
+      await OTP.destroy({ where: { id: otpRecord.id } }); // Clean up expired OTP
+      logger.warn(`OTP expired for email: ${email}`);
+      return res.status(400).json({ message: 'OTP has expired. Please request a new one.' });
+    }
+
+    // 3. Validate OTP value
+    if (otpRecord.otp !== otp) {
+      logger.warn(`Invalid OTP entered for email: ${email}`);
+      return res.status(400).json({ message: 'Invalid OTP' });
+    }
+
+    // 4. Destroy OTP (one-time use)
+    await OTP.destroy({ where: { id: otpRecord.id } });
+
+    // 5. Check if company exists
+    const company = await Company.findOne({ where: { email } });
+
+    if (!company) {
+      logger.error('Company not found');
+      return res.status(404).json({ message: 'Company not found' });
+    }
+
+    // 6. Handle approval status
+    if (company.status !== 'approved' || company.isVerified !== true) {
+      logger.info(`OTP verified for pending company: ${company.email}`);
+      return res.status(201).json({ message: 'OTP verified. Awaiting admin approval.' });
+    }
+
+    // 7. Generate token for approved company
+    const token = generateToken({
+      id: company.id,
+      companyName: company.companyName,
+      email: company.email,
+    });
+
+    logger.info(`OTP verified and token generated for: ${company.companyName}`);
+    return res.status(200).json({ token });
+
   } catch (error) {
-    logger.error('Error verifying OTP:', error);
+    logger.error('Error during OTP verification:', error);
     return res.status(500).json({ message: 'Internal server error' });
   }
 };

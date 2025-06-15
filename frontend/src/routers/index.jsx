@@ -24,6 +24,12 @@ import CompanyDashboard from '../pages/company/CompanyDashboard';
 import CampusDashboard from '../pages/TPO/CampusDashboard';
 import AdminDashboard from '../pages/admin/AdminDashboard';
 import JobDescription3 from '../pages/company/JobDescription3';
+import ManageJobs from '../pages/TPO/ManageJobs';
+import JobDescription4 from '../pages/TPO/JobDescription4';
+import CampusApplicationList from '../pages/TPO/CampusApplicationList';
+import CompanyRequests from '../pages/admin/CompanyRequests';
+import WaitingForApproval from '../pages/company/WaitingForApproval';
+import IndustryManager from '../pages/admin/IndustryManager';
 
 const AppRouter = () => {
     return (
@@ -48,22 +54,26 @@ const AppRouter = () => {
                 <Route path='/company/dashboard' element={<ProtectedRoute allowedRoles={['company']}> <CompanyDashboard /> </ProtectedRoute>} />
                 <Route path="/company/edit-job-post/:jobId" element={<ProtectedRoute allowedRoles={['company']}> <JobPost /> </ProtectedRoute>} />
                 <Route path="/company/job-post" element={<ProtectedRoute allowedRoles={['company']}> <JobPost /> </ProtectedRoute>} />
-
                 <Route path="/company/job-list" element={<ProtectedRoute allowedRoles={['company']}> <JobListPage /> </ProtectedRoute>} />
                 <Route path='/company/companyprofile' element={<ProtectedRoute allowedRoles={['company']}> <CompanyProfile /> </ProtectedRoute>} />
                 <Route path='/company/applications/:jobId' element={<ProtectedRoute allowedRoles={['company']}> <JobApplication /> </ProtectedRoute>} />
                 <Route path='/company/job/:id' element={<ProtectedRoute allowedRoles={['company']}> <JobDescription3 /> </ProtectedRoute>} />
                 <Route path="/company/login" element={<Login /> } />
                 <Route path="/company/register" element={<Register />} />
-
+                <Route path="/company/waiting-approval" element={<WaitingForApproval />} />
                 {/* campus routes */}
                 <Route path='/campus/dashboard' element={<ProtectedRoute allowedRoles={['TPO']}> <CampusDashboard /> </ProtectedRoute>} />
                 <Route path='/campus/post-job' element={<ProtectedRoute allowedRoles={['TPO']}> <CampusJobPost /> </ProtectedRoute>} />
+                <Route path='/campus/edit-job/:jobId' element={<ProtectedRoute allowedRoles={['TPO']}> <CampusJobPost /> </ProtectedRoute>} />
                 <Route path="/campus/campus-applications" element={<ProtectedRoute allowedRoles={['TPO']}> <CampusApplicatons /> </ProtectedRoute>} />
-
+                <Route path="/campus/manage-jobs" element={<ProtectedRoute allowedRoles={['TPO']}> <ManageJobs /> </ProtectedRoute>} />
+                <Route path="/campus/job/:jobId" element={<ProtectedRoute allowedRoles={['TPO']}> <JobDescription4 /> </ProtectedRoute>} />
+                <Route path='/campus/applications/:jobId' element={<ProtectedRoute allowedRoles={['TPO']}> <CampusApplicationList /> </ProtectedRoute>} />
+                
                 {/* admin routes */}
                 <Route path="/admin/dashboard" element={<ProtectedRoute allowedRoles={['admin']}> <AdminDashboard/> </ProtectedRoute>} />
-
+                <Route path="/admin/company-request" element={<ProtectedRoute allowedRoles={['admin']}> <CompanyRequests/> </ProtectedRoute>} />
+                <Route path='/admin/manage-industry' element={<ProtectedRoute allowedRoles={['admin']}> <IndustryManager/> </ProtectedRoute>} />
 
 
                 <Route path="*" element={<NotFound />} />

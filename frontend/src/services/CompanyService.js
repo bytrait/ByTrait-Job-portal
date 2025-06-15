@@ -25,3 +25,21 @@ export const getCompanyProfile = async () => {
 }
 
 
+
+export const getPendingCompanies = async () => {
+    const res = await API.get('/company/companies');
+    return res.data;
+  };
+  
+  export const approveCompany = async (companyId) => {
+    const res = await API.put(`/company/${companyId}/approve`);
+    return res.data;
+  };
+  
+  export const rejectCompany = async (companyId) => {
+    const res = await API.put(`/company/${companyId}/reject`);
+    return res.data;
+  };
+
+
+

@@ -8,4 +8,8 @@ router.post('/jobs',verifyStudentTokenFromCookie, campusJobcontroller.createCamp
 router.get('/my-campus-jobs', verifyStudentTokenFromCookie, campusJobcontroller.getCampusJobs);
 // Get a campus job by ID
 router.get('/jobs/:id', verifyStudentTokenFromCookie, campusJobcontroller.getCampusJobById);
+// Update a campus job by ID
+router.put('/jobs/:id', verifyStudentTokenFromCookie, campusJobcontroller.updateCampusJob);
+// Delete a campus job by ID
+router.delete('/jobs/:id', verifyStudentTokenFromCookie, campusJobcontroller.deleteCampusJob);
 module.exports = router;

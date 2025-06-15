@@ -1,55 +1,81 @@
-const { CampusJob, CampusJobApplication } = require("../models");
+// controllers/campusJobApplicationController.js
 
+const { CampusJobApplication, CampusJob } = require('../models');
+const axios = require('axios');
 
-const applyToCampusJob = async (req, res) => {
+exports.applyToCampusJob = async (req, res) => {
   try {
-    const jobId = parseInt(req.params.jobId);
-    const { student_id, school_id } = req.user; // from JWT middleware
+    const studentId = req.user.userId;
+    const schoolId = req.user.schoolId;
+    const { jobId } = req.params;
 
-    if (!jobId || !student_id || !school_id) {
-      logger.warn("Missing jobId, student_id, or school_id from request.");
-      return res.status(400).json({ message: "Invalid request data" });
-    }
-
-    const job = await CampusJob.findByPk(jobId);
-
-    if (!job) {
-      logger.warn(`CampusJob not found for id ${jobId}`);
-      return res.status(404).json({ message: "Campus job not found" });
-    }
-
-    if (job.school_id !== school_id) {
-      logger.warn(`Student from another school tried to apply: student=${student_id}, job_school=${job.school_id}, student_school=${school_id}`);
-      return res.status(403).json({ message: "Unauthorized to apply for this job" });
-    }
+    // Validate if job exists
+    const job = await CampusJob.findOne({ where: { id: jobId, school_id: schoolId } });
+    if (!job) return res.status(404).json({ message: 'Job not found' });
 
     // Check if already applied
-    const existing = await CampusJobApplication.findOne({
-      where: { student_id, job_id: jobId }
+    const alreadyApplied = await CampusJobApplication.findOne({
+      where: { student_id: studentId, job_id: jobId }
     });
 
-    if (existing) {
-      logger.info(`Duplicate apply attempt by student ${student_id} for job ${jobId}`);
-      return res.status(200).json({ message: "Already applied" });
+    if (alreadyApplied) {
+      return res.status(400).json({ message: 'You have already applied to this job' });
     }
 
-    // Create application entry
-    await CampusJobApplication.create({
-      student_id,
+    // Create application
+    const application = await CampusJobApplication.create({
+      student_id: studentId,
       job_id: jobId,
-      school_id,
-      status: "applied"
+      school_id: schoolId
     });
 
-    logger.info(`Student ${student_id} applied to job ${jobId}`);
-    return res.status(201).json({ message: "Application logged. Redirect to application link.", applyLink: job.applyLink });
-
-  } catch (error) {
-    logger.error("Error in applyToCampusJob:", error);
-    return res.status(500).json({ message: "Something went wrong" });
+    res.status(201).json({ message: 'Applied successfully', application });
+  } catch (err) {
+    console.error('Application Error:', err);
+    res.status(500).json({ message: 'Failed to apply for job' });
   }
 };
 
-module.exports = {
-  applyToCampusJob,
+exports.getCampusApplicationsWithStudentData = async (req, res) => {
+  const jobId = req.params.jobId;
+  console.log("Fetching applications for jobId:", jobId);
+  try {
+    // 1. Fetch applications for the given jobId
+    const applications = await CampusJobApplication.findAll({
+      where: { job_id: jobId },
+      attributes: ["id", "student_id", "job_id", "applied_at"],
+    });
+
+    if (applications.length === 0) {
+      return res.status(404).json({ message: "No applications found" });
+    }
+
+    // 2. Extract unique student IDs
+    const studentIds = applications.map(app => app.student_id);
+
+    // 3. Call external student API to get student data
+    const studentRes = await axios.get(`${process.env.MYPROFILE_BASE_URL}/users`, {
+      params: { ids: studentIds.join(",") },
+    });
+
+    const students = studentRes.data;
+    // 4. Merge each application with corresponding student data
+    const result = applications.map(app => {
+      const student = students.find(s => s.user_id === app.student_id);
+      return {
+        applicationId: app.id,
+        jobId: app.job_id,
+        studentId: app.student_id,
+        appliedAt: app.applied_at,
+        name: student?.name,
+        education: student?.course,
+        location: student?.location,
+      };
+    });
+
+    res.status(200).json(result);
+  } catch (error) {
+    console.error("Error fetching campus applications with student data:", error.message);
+    res.status(500).json({ message: "Internal server error" });
+  }
 };
