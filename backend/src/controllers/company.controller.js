@@ -1,7 +1,7 @@
 const db = require('../models');
 const Company = db.Company;
 const cloudinary = require('../utils/cloudinary');
-const { default: getCloudinaryPublicId } = require('../utils/getCloudinaryPublicId');
+const getCloudinaryPublicId = require('../utils/getCloudinaryPublicId');
 const logger = require('../utils/logger');
 const sendCompanyApprovalEmail = require('../utils/sendCompanyApprovalEmail');
 

@@ -21,5 +21,6 @@ app.use('/api/job-applications', require('./routes/jobApplication.routes'));
 app.use('/api/campus-jobs', require('./routes/campushJob.routes'));
 app.use('/api/job-scraped', require('./routes/jobScraped.routes'));
 app.use('/api/campus-job-applications', require('./routes/campusJobApplication.routes'));
+app.use('/api/skills', require('./routes/scraperSkill.routes'));
 
 module.exports = app;

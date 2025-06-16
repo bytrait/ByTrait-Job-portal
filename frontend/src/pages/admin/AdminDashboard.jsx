@@ -1,11 +1,11 @@
 import React from 'react';
+import ManageScraperSkills from './ManageScraperSkills';
 
 const AdminDashboard = () => {
     return (
-        <div>
+        <div className='container mt-4'>
             <h1>Admin Dashboard</h1>
-            <p>Welcome to the admin dashboard. Here you can manage users, view reports, and configure settings.</p>
-            {/* Add more admin functionalities here */}
+          <ManageScraperSkills/>
         </div>
     );
 }
