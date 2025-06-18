@@ -4,6 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { useAuth } from '../../context/AuthContext';
 import Loader from '../common/Loader';
+import logo from '../../assets/bytrait_logo.png';
 
 const CompanyLogin = () => {
   const [email, setEmail] = useState('');
@@ -65,7 +66,7 @@ const CompanyLogin = () => {
       <div className="flex">
         <div className="col-md-6">
           <div className="p-4">
-            <img src="/src/assets/bytrait_logo.png" alt="ByTrait Logo" className="img-fluid" style={{ maxWidth: '250px' }} />
+            <img src={logo} alt="ByTrait Logo" className="img-fluid" style={{ maxWidth: '250px' }} />
             <div className="fs-3">Company Login</div>
           </div>
           <div className="p-4">

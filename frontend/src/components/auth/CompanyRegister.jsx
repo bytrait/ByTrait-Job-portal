@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { registerAndLogin, sendOtpForRegistration } from '../../services/authService';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import logo from '../../assets/bytrait_logo.png';
+
 
 const CompanyRegister = () => {
   const [email, setEmail] = useState('');
@@ -44,7 +46,7 @@ const CompanyRegister = () => {
       <div className="flex">
         <div className="col-md-6">
           <div className="p-4">
-            <img src="/src/assets/bytrait_logo.png" alt="ByTrait Logo" className="img-fluid" style={{ maxWidth: '250px' }} />
+            <img src={logo} alt="ByTrait Logo" className="img-fluid" style={{ maxWidth: '250px' }} />
             <div className="fs-3">Company Register</div>
           </div>
           <div className="p-4">

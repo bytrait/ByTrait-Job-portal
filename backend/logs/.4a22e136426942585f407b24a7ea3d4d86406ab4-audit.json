@@ -46,6 +46,7 @@
             "hash": "1c28a70a03d998b931d48dad13f98bc1e3a544767033596dfbc5ba3e7b78fd80"
         },
         {
+<<<<<<< HEAD
             "date": 1750137196542,
             "name": "logs/2025-06-17-combined.log",
             "hash": "18d7a238a8ebc102ed55c860f3a2bf8e4092c416b291a3b1464d1ed60bfa367a"
@@ -54,6 +55,11 @@
             "date": 1750229273774,
             "name": "logs/2025-06-18-combined.log",
             "hash": "33f702da77de6db39b15f4b3ad06d256589fbbea2c684095d0fa58157309a8ea"
+=======
+            "date": 1750231432016,
+            "name": "logs/2025-06-18-combined.log",
+            "hash": "d29015f665dfeee84caabac8bb244855741726d6ebacdf7fda599458e2163df3"
+>>>>>>> a3f56a6 (fix logo issue)
         }
     ],
     "hashType": "sha256"
