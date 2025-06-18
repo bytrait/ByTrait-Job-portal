@@ -7,4 +7,5 @@ const getCloudinaryPublicId = (url) => {
     return filename.split('.')[0]; // remove .jpg/.png etc.
 };
 
-export default getCloudinaryPublicId;
+module.exports = getCloudinaryPublicId;
+
